@@ -112,9 +112,15 @@
   2. Mengoptimalkan `middleware.ts` menjadi 100% sinkronis (0ms latency, ukuran middleware terpangkas dari 86.5 kB menjadi 26.7 kB tanpa ketergantungan network call).
   3. Menambahkan **Client-Side Session Auto-Healer** di `UserAppLayout` (`/app`) dan `AdminAppLayout` (`/admin`) yang secara otomatis menyinkronkan cookie dari `localStorage` jika sewaktu-waktu browser membersihkan cookie.
   4. Mengganti tag `<a>` polos di `/app/scan` dan `/app/telegram` menjadi Next.js `<Link>`.
-  5. Pengujian build Next.js (32 route static/dynamic, Exit code 0), commit & push ke GitHub, dan verifikasi deploy di Vercel berstatus `READY`.
-
-
-
-
+## [2026-10-08 13:52 WIB] Pengujian dan Verifikasi Live Production Sukses
+- **Status Deployment Vercel**: Deployment commit `4ebd67f` selesai ter-deploy dengan status `READY`.
+- **Hasil Pengujian Endpoint & Rute**:
+  - `https://dicatetin-sand.vercel.app/app` -> **HTTP 200 OK**
+  - `https://dicatetin-sand.vercel.app/app/scan` -> **HTTP 200 OK** (Tidak ada redirect/logout)
+  - `https://dicatetin-sand.vercel.app/app/transaksi` -> **HTTP 200 OK**
+  - `https://dicatetin-sand.vercel.app/app/wallet` -> **HTTP 200 OK**
+  - `https://dicatetin-sand.vercel.app/app/budget` -> **HTTP 200 OK**
+  - `https://dicatetin-sand.vercel.app/app/telegram` -> **HTTP 200 OK**
+  - `https://dicatetin-sand.vercel.app/app/laporan` -> **HTTP 200 OK**
+- **Kesimpulan**: Bug logout otomatis saat user mengklik menu atau fitur (seperti Scan Struk) di mode user telah teratasi secara permanen.
 
