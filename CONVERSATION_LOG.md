@@ -83,4 +83,25 @@
   - Vercel (Personal Access Tokens)
   - GitHub (Personal Access Tokens Classic & Fine-grained)
 
+## [2026-10-08 12:41 WIB] Migrasi Penuh & Publikasi Online (GitHub, Supabase, Vercel)
+- **1. GitHub**:
+  - Berhasil membuat remote repository publik baru `budimanrehan63-collab/dicatetin`.
+  - Inisialisasi Git, penambahan seluruh kode sumber lengkap, dan push ke branch `main`.
+  - Tautan Repository: [https://github.com/budimanrehan63-collab/dicatetin](https://github.com/budimanrehan63-collab/dicatetin)
+- **2. Supabase**:
+  - Membuat project baru `dicatetin` di region `ap-southeast-1` (Singapore) via Supabase Management API.
+  - Project Ref: `uhcehhmrsmrlwdkdgdfm` (Organisasi `fauzy`).
+  - Menjalankan migrasi DDL & DML skema database penuh `20261006000000_dicatetin_init.sql` (19 tabel, views, triggers, RLS policies, seed plans & categories).
+  - Mendaftarkan akun Superadmin Utama `fauzymnf29@gmail.com` / `Test123` di Supabase Auth & tabel `profiles` dengan status aktif (`superadmin`).
+- **3. Vercel**:
+  - Membuat project `dicatetin` di Vercel Team `fauzy1` yang terhubung secara otomatis ke repository GitHub.
+  - Mengonfigurasi seluruh Environment Variables produksi (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD`, `ENCRYPTION_SECRET_KEY`, `CRON_SECRET`, `TELEGRAM_BOT_USERNAME`, `TELEGRAM_WEBHOOK_SECRET`, `MIDTRANS_IS_PRODUCTION`, `NEXT_PUBLIC_APP_URL`).
+  - Memicu deploy produksi Next.js; status build **READY (Exit code 0)**.
+  - Tautan Publik Live: [https://dicatetin-sand.vercel.app](https://dicatetin-sand.vercel.app)
+  - Tautan Domain Alternatif: [https://dicatetin-fauzy1.vercel.app](https://dicatetin-fauzy1.vercel.app)
+- **4. Verifikasi & Pengujian Kualitas**:
+  - Memverifikasi respon HTTP 200 OK pada Landing Page, `/login`, `/daftar`, `/lupa-password`, `/menunggu-persetujuan`, `/syarat-ketentuan`, `/kebijakan-privasi`.
+  - Memastikan 100% keselarasan fitur dengan localhost: fitur toggle mata kata sandi, persistensi `AdminStore`, 4 tab riwayat persetujuan, sinkronisasi harga paket ke LP, upload bukti pembayaran, dan akun Superadmin.
+
+
 

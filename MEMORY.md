@@ -18,3 +18,11 @@
 - **Security & RLS**: Strict Supabase RLS on all tables. Admin operations through secure server action/route handlers with `requireAdmin()`.
 - **Admin Store & State Persistence**: All admin operations (User status, ACC, reject, suspend, delete, edit, plan price/text changes, new custom features, approval queues) are managed via `AdminStore` (`src/lib/data/adminStore.ts`), ensuring 100% persistence across browser reloads, navigation, and testing.
 - **Dynamic Calculation**: Overview metrics (Total Users, Active, Pending, MRR, Basic vs Pro) are dynamically computed from stored entities rather than static dummy figures.
+
+## Production Deployment & Public URLs
+- **GitHub Repository**: [https://github.com/budimanrehan63-collab/dicatetin](https://github.com/budimanrehan63-collab/dicatetin) (Main branch)
+- **Supabase Project**: `dicatetin` (Ref: `uhcehhmrsmrlwdkdgdfm`, Region: `ap-southeast-1` Singapore, Organization: `fauzy`)
+- **Vercel Live Production URL**: [https://dicatetin-sand.vercel.app](https://dicatetin-sand.vercel.app)
+- **Vercel Team Domain**: [https://dicatetin-fauzy1.vercel.app](https://dicatetin-fauzy1.vercel.app)
+- **Superadmin Credentials**: `fauzymnf29@gmail.com` / `Test123` (Active on Supabase DB & Auth)
+
