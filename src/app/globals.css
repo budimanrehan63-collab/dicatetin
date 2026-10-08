@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FFFFFF;
+    --surface: #F6F9F7;
+    --border: #E3EBE6;
+    --text-primary: #0F1F17;
+    --text-secondary: #5B6B62;
+    --primary: #0F7A4F;
+    --primary-hover: #0B5E3C;
+    --primary-foreground: #FFFFFF;
+    --gold: #C9A44C;
+    --gold-light: #FDF8EB;
+    --income: #16A34A;
+    --expense: #DC2626;
+    --budget-warning: #D97706;
+  }
+
+  .dark {
+    --background: #0B1410;
+    --surface: #121E18;
+    --border: #1F2E26;
+    --text-primary: #ECF3EF;
+    --text-secondary: #93A69B;
+    --primary: #34C88A;
+    --primary-hover: #5AD6A1;
+    --primary-foreground: #0B1410;
+    --gold: #D9B866;
+    --gold-light: #282315;
+    --income: #4ADE80;
+    --expense: #F87171;
+    --budget-warning: #FBBF24;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-text-primary font-body antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
