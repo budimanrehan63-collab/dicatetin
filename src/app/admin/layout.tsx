@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { AdminSidebar } from "@/components/layouts/AdminSidebar";
 import { AdminHeader } from "@/components/layouts/AdminHeader";
+import { setAppCookie } from "@/lib/utils/cookies";
 
 export default function AdminAppLayout({
   children,
@@ -17,14 +18,8 @@ export default function AdminAppLayout({
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      const isProd = window.location.protocol === "https:";
-      const secureFlag = isProd ? "; Secure" : "";
-      document.cookie = `dicatetin_session=admin; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
-      document.cookie = `dicatetin_admin_session=admin; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
-      try {
-        localStorage.setItem("dicatetin_session", "admin");
-        localStorage.setItem("dicatetin_admin_session", "admin");
-      } catch (e) {}
+      setAppCookie("dicatetin_session", "admin", 365);
+      setAppCookie("dicatetin_admin_session", "admin", 365);
     }
   }, []);
 

@@ -5,6 +5,7 @@ import { UserSidebar } from "@/components/layouts/UserSidebar";
 import { UserHeader } from "@/components/layouts/UserHeader";
 import { MobileBottomNav } from "@/components/layouts/MobileBottomNav";
 import { QuickRecordModal } from "@/components/transactions/QuickRecordModal";
+import { setAppCookie } from "@/lib/utils/cookies";
 
 export default function UserAppLayout({
   children,
@@ -15,18 +16,12 @@ export default function UserAppLayout({
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
-      const cookies = document.cookie;
       const stored = localStorage.getItem("dicatetin_session") || "user";
       const storedAdmin = localStorage.getItem("dicatetin_admin_session");
 
-      const isProd = window.location.protocol === "https:";
-      const secureFlag = isProd ? "; Secure" : "";
-
-      if (!cookies.includes("dicatetin_session=")) {
-        document.cookie = `dicatetin_session=${stored}; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
-      }
-      if (storedAdmin && !cookies.includes("dicatetin_admin_session=")) {
-        document.cookie = `dicatetin_admin_session=admin; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
+      setAppCookie("dicatetin_session", stored, 365);
+      if (storedAdmin === "admin") {
+        setAppCookie("dicatetin_admin_session", "admin", 365);
       }
     }
   }, []);
