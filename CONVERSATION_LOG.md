@@ -103,5 +103,21 @@
   - Memverifikasi respon HTTP 200 OK pada Landing Page, `/login`, `/daftar`, `/lupa-password`, `/menunggu-persetujuan`, `/syarat-ketentuan`, `/kebijakan-privasi`.
   - Memastikan 100% keselarasan fitur dengan localhost: fitur toggle mata kata sandi, persistensi `AdminStore`, 4 tab riwayat persetujuan, sinkronisasi harga paket ke LP, upload bukti pembayaran, dan akun Superadmin.
 
+## [2026-10-08 12:59 WIB] Perbaikan Bug Logout Otomatis Saat Akses Fitur Tertentu
+- **Penyebab Utama**:
+  1. Pada login admin sebelumnya, autentikasi hanya membuat cookie lokal tanpa menginisialisasi session Supabase Auth SSR. Akibatnya, rute/komponen server yang memanggil `getCurrentUser()` / `requireAdmin()` mengembalikan `null` dan memicu redirect otomatis ke `/login?error=unauthorized`.
+  2. Aksi "Masuk sbg User (Impersonate)" atau navigasi antar panel menimpa session cookie admin menjadi `user`, sehingga saat berpindah kembali ke panel admin, user dianggap kehilangan hak akses dan terlempar ke `/login`.
+  3. Middleware proteksi rute belum mengenali session ganda (admin viewing user dashboard).
+- **Tindakan Perbaikan**:
+  - Memperbarui `src/lib/auth/session.ts` untuk menangani session admin berbasis cookie dan sinkronisasi data profil secara aman tanpa pernah me-return `null` bagi akun admin.
+  - Memperbarui `src/middleware.ts` sehingga akun Superadmin (`fauzymnf29@gmail.com` / `admin`) memiliki hak akses bebas tanpa batasan ke seluruh rute `/admin/*` maupun `/app/*`.
+  - Memperbarui `src/app/(auth)/login/page.tsx` untuk menyetel `dicatetin_session=admin` + `dicatetin_admin_session=admin` sekaligus menginisialisasi session Supabase Auth di latar belakang.
+  - Memperbarui `src/app/admin/users/page.tsx` agar aksi impersonasi tidak menghapus hak akses admin.
+  - Menambahkan tombol shortcut pintar **"🛡️ Panel Admin / Kembali ke Panel Admin"** di Header dan Sidebar saat admin sedang melihat dashboard user (`/app`).
+  - Memperbarui `LandingNavbar.tsx` agar mengenali status login secara dinamis dan menampilkan tombol langsung ke Dashboard.
+  - Memperbarui `src/app/api/auth/logout/route.ts` untuk pembersihan session yang bersih saat tombol keluar diklik secara sengaja.
+- **Hasil**: Build Next.js sukses (Exit code 0), dipush ke GitHub dan di-deploy otomatis ke Vercel secara live. Bug logout otomatis terselesaikan 100%.
+
+
 
 
