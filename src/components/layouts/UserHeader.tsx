@@ -23,6 +23,19 @@ export function UserHeader({
   isImpersonating = false,
 }: UserHeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false);
+
+  React.useEffect(() => {
+    if (typeof document !== "undefined") {
+      const cookies = document.cookie;
+      if (
+        cookies.includes("dicatetin_session=admin") ||
+        cookies.includes("dicatetin_admin_session=admin")
+      ) {
+        setIsAdminUser(true);
+      }
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 md:px-8 border-b border-border bg-background/80 backdrop-blur-md">
@@ -41,6 +54,20 @@ export function UserHeader({
 
       {/* Right side controls */}
       <div className="flex items-center gap-2.5">
+        {isAdminUser && (
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="border-expense/30 bg-expense/10 text-expense hover:bg-expense/20 text-xs font-bold gap-1.5 h-9"
+          >
+            <Link href="/admin">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Panel Admin</span>
+            </Link>
+          </Button>
+        )}
+
         {onOpenQuickRecord && (
           <Button
             onClick={onOpenQuickRecord}

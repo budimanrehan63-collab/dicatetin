@@ -124,6 +124,18 @@ export function UserSidebar({ userPlan = "pro" }: UserSidebarProps) {
           )}
         </div>
 
+        {typeof document !== "undefined" &&
+          (document.cookie.includes("dicatetin_session=admin") ||
+            document.cookie.includes("dicatetin_admin_session=admin")) && (
+            <Link
+              href="/admin"
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold text-expense bg-expense/10 hover:bg-expense/20 border border-expense/30 transition-colors"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Kembali ke Panel Admin</span>
+            </Link>
+          )}
+
         <Link
           href="/api/auth/logout"
           className="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-medium text-text-secondary hover:text-expense hover:bg-expense/10 transition-colors"

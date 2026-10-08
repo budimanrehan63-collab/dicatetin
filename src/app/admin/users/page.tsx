@@ -198,7 +198,8 @@ export default function AdminUsersPage() {
   };
 
   const handleImpersonate = (user: UserItem) => {
-    document.cookie = `dicatetin_session=user; path=/; max-age=86400; SameSite=Lax`;
+    document.cookie = `dicatetin_admin_session=admin; path=/; max-age=86400; SameSite=Lax`;
+    document.cookie = `dicatetin_session=admin; path=/; max-age=86400; SameSite=Lax`;
     window.location.href = "/app";
   };
 

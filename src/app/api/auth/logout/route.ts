@@ -14,5 +14,6 @@ export async function GET(request: Request) {
   const url = new URL("/login", request.url);
   const response = NextResponse.redirect(url);
   response.cookies.set("dicatetin_session", "", { path: "/", maxAge: 0 });
+  response.cookies.set("dicatetin_admin_session", "", { path: "/", maxAge: 0 });
   return response;
 }

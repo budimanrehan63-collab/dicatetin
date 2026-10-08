@@ -9,6 +9,24 @@ import { Menu, X, ArrowRight, Sparkles } from "lucide-react";
 
 export function LandingNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sessionType, setSessionType] = useState<"admin" | "user" | null>(null);
+
+  React.useEffect(() => {
+    if (typeof document !== "undefined") {
+      const cookies = document.cookie;
+      if (
+        cookies.includes("dicatetin_session=admin") ||
+        cookies.includes("dicatetin_admin_session=admin")
+      ) {
+        setSessionType("admin");
+      } else if (
+        cookies.includes("dicatetin_session=user") ||
+        cookies.includes("dicatetin_session=active")
+      ) {
+        setSessionType("user");
+      }
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
@@ -38,15 +56,33 @@ export function LandingNavbar() {
         {/* Right CTA */}
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
-          <Button asChild variant="ghost" size="sm" className="font-semibold text-xs">
-            <Link href="/login">Masuk</Link>
-          </Button>
-          <Button asChild size="sm" className="font-bold text-xs gap-1.5 shadow-subtle">
-            <Link href="/daftar">
-              <span>Coba Sekarang</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </Button>
+          {sessionType === "admin" ? (
+            <Button asChild size="sm" className="font-bold text-xs gap-1.5 shadow-subtle bg-expense hover:bg-expense/90 text-white">
+              <Link href="/admin">
+                <span>Panel Admin</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </Button>
+          ) : sessionType === "user" ? (
+            <Button asChild size="sm" className="font-bold text-xs gap-1.5 shadow-subtle">
+              <Link href="/app">
+                <span>Dashboard Saya</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </Button>
+          ) : (
+            <>
+              <Button asChild variant="ghost" size="sm" className="font-semibold text-xs">
+                <Link href="/login">Masuk</Link>
+              </Button>
+              <Button asChild size="sm" className="font-bold text-xs gap-1.5 shadow-subtle">
+                <Link href="/daftar">
+                  <span>Coba Sekarang</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -102,12 +138,24 @@ export function LandingNavbar() {
             </a>
           </nav>
           <div className="pt-2 flex flex-col gap-2">
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/login">Masuk ke Akun</Link>
-            </Button>
-            <Button asChild className="w-full font-bold">
-              <Link href="/daftar">Daftar Sekarang</Link>
-            </Button>
+            {sessionType === "admin" ? (
+              <Button asChild className="w-full font-bold bg-expense hover:bg-expense/90 text-white">
+                <Link href="/admin">Masuk ke Panel Admin</Link>
+              </Button>
+            ) : sessionType === "user" ? (
+              <Button asChild className="w-full font-bold">
+                <Link href="/app">Buka Dashboard Saya</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="outline" className="w-full">
+                  <Link href="/login">Masuk ke Akun</Link>
+                </Button>
+                <Button asChild className="w-full font-bold">
+                  <Link href="/daftar">Daftar Sekarang</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}

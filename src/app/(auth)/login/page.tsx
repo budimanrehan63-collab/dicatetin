@@ -39,8 +39,20 @@ function LoginForm() {
     // 1. Primary Superadmin Authentication (fauzymnf29@gmail.com)
     if (cleanEmail === "fauzymnf29@gmail.com" && password === "Test123") {
       document.cookie = "dicatetin_session=admin; path=/; max-age=86400; SameSite=Lax";
+      document.cookie = "dicatetin_admin_session=admin; path=/; max-age=86400; SameSite=Lax";
+      
+      // Also establish Supabase session
+      try {
+        await supabase.auth.signInWithPassword({
+          email: cleanEmail,
+          password,
+        });
+      } catch (e) {
+        // continue
+      }
+
       setTimeout(() => {
-        window.location.href = "/admin";
+        window.location.href = redirectPath.startsWith("/admin") ? redirectPath : "/admin";
       }, 300);
       return;
     }
@@ -49,7 +61,7 @@ function LoginForm() {
     if (cleanEmail === "user@dicatetin.id" || cleanEmail.includes("user")) {
       document.cookie = "dicatetin_session=user; path=/; max-age=86400; SameSite=Lax";
       setTimeout(() => {
-        window.location.href = "/app";
+        window.location.href = redirectPath.startsWith("/app") ? redirectPath : "/app";
       }, 300);
       return;
     }
@@ -72,6 +84,15 @@ function LoginForm() {
       }
 
       if (data?.user) {
+        const isAdminUser = cleanEmail === "fauzymnf29@gmail.com";
+
+        if (isAdminUser) {
+          document.cookie = "dicatetin_session=admin; path=/; max-age=86400; SameSite=Lax";
+          document.cookie = "dicatetin_admin_session=admin; path=/; max-age=86400; SameSite=Lax";
+          window.location.href = redirectPath.startsWith("/admin") ? redirectPath : "/admin";
+          return;
+        }
+
         document.cookie = "dicatetin_session=active; path=/; max-age=86400; SameSite=Lax";
         
         const { data: profile } = await supabase
@@ -87,11 +108,12 @@ function LoginForm() {
 
         if (profile?.role === "admin" || profile?.role === "superadmin") {
           document.cookie = "dicatetin_session=admin; path=/; max-age=86400; SameSite=Lax";
+          document.cookie = "dicatetin_admin_session=admin; path=/; max-age=86400; SameSite=Lax";
           window.location.href = "/admin";
           return;
         }
 
-        window.location.href = redirectPath;
+        window.location.href = redirectPath.startsWith("/app") ? redirectPath : "/app";
       }
     } catch (err: any) {
       setErrorMessage(err?.message || "Terjadi kesalahan saat masuk. Silakan coba lagi.");
