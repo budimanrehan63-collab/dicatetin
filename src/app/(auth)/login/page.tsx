@@ -8,6 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Lock, Mail, AlertCircle, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { setAppCookie } from "@/lib/utils/cookies";
 
 function LoginForm() {
   const router = useRouter();
@@ -30,30 +31,10 @@ function LoginForm() {
   const supabase = createClient();
 
   const setSessionCookies = async (role: string) => {
-    const isProd = typeof window !== "undefined" && window.location.protocol === "https:";
-    const secureFlag = isProd ? "; Secure" : "";
-    const maxAge = 60 * 60 * 24 * 30; // 30 days
-
-    document.cookie = `dicatetin_session=${role}; path=/; max-age=${maxAge}; SameSite=Lax${secureFlag}`;
+    setAppCookie("dicatetin_session", role, 30);
     if (role === "admin" || role === "superadmin") {
-      document.cookie = `dicatetin_admin_session=admin; path=/; max-age=${maxAge}; SameSite=Lax${secureFlag}`;
+      setAppCookie("dicatetin_admin_session", "admin", 30);
     }
-
-    try {
-      localStorage.setItem("dicatetin_session", role);
-      if (role === "admin" || role === "superadmin") {
-        localStorage.setItem("dicatetin_admin_session", "admin");
-      }
-    } catch (e) {}
-
-    // Set server HTTP cookies synchronously
-    try {
-      await fetch("/api/auth/session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role }),
-      });
-    } catch (e) {}
   };
 
   const handleEmailLogin = async (e: React.FormEvent) => {

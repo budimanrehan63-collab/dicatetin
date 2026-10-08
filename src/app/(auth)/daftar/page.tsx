@@ -24,6 +24,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import { AdminStore, PlanItem } from "@/lib/data/adminStore";
+import { setAppCookie } from "@/lib/utils/cookies";
 
 function RegisterForm() {
   const router = useRouter();
@@ -95,7 +96,7 @@ function RegisterForm() {
       // Save reference to last registered email
       if (typeof window !== "undefined") {
         localStorage.setItem("dicatetin_last_registered_email", cleanEmail);
-        document.cookie = "dicatetin_session=pending; path=/; max-age=86400; SameSite=Lax";
+        setAppCookie("dicatetin_session", "pending", 1);
       }
 
       setTimeout(() => {

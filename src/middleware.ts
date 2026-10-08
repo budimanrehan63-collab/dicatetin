@@ -29,9 +29,9 @@ export function middleware(request: NextRequest) {
     sessionCookie === "pending" ||
     !!sessionCookie;
 
-  // 3. User Dashboard routes (/app/*)
+  // 3. User Dashboard routes (/app and /app/*)
   // Accessible by all logged in users AND admins
-  if (pathname.startsWith("/app")) {
+  if (pathname === "/app" || pathname.startsWith("/app/")) {
     if (!isAuthenticated) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("redirect", pathname);
@@ -40,9 +40,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. Admin Dashboard routes (/admin/*)
+  // 4. Admin Dashboard routes (/admin and /admin/*)
   // Strictly requires admin privileges
-  if (pathname.startsWith("/admin")) {
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
     if (!isAdmin) {
       const loginUrl = new URL("/login", request.url);
       loginUrl.searchParams.set("redirect", pathname);
@@ -64,7 +64,9 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/app",
     "/app/:path*",
+    "/admin",
     "/admin/:path*",
     "/login",
     "/daftar",

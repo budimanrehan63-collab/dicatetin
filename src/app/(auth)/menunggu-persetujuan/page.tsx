@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { formatIDR } from "@/lib/utils/currency";
 import { AdminStore, PaymentItem, UserItem } from "@/lib/data/adminStore";
+import { setAppCookie } from "@/lib/utils/cookies";
 
 export default function PendingApprovalPage() {
   const router = useRouter();
@@ -115,7 +116,7 @@ export default function PendingApprovalPage() {
     if (user?.status === "active") {
       setIsApproved(true);
       setStatusMessage("Selamat! Akun Anda telah disetujui (ACC) oleh Admin. Mengarahkan ke Beranda...");
-      document.cookie = "dicatetin_session=user; path=/; max-age=86400; SameSite=Lax";
+      setAppCookie("dicatetin_session", "user", 30);
       setTimeout(() => {
         router.push("/app");
       }, 1200);
@@ -145,7 +146,7 @@ export default function PendingApprovalPage() {
         <CardContent className="space-y-4">
           <Button
             onClick={() => {
-              document.cookie = "dicatetin_session=user; path=/; max-age=86400; SameSite=Lax";
+              setAppCookie("dicatetin_session", "user", 30);
               router.push("/app");
             }}
             className="w-full font-bold gap-2"
