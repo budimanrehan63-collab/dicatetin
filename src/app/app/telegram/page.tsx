@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   Send,
   Bot,
@@ -60,10 +61,10 @@ export default function UserTelegramPage() {
         </div>
 
         <Button asChild size="lg" variant="gold" className="gap-2 font-bold">
-          <a href="/app/pengaturan">
+          <Link href="/app/pengaturan">
             <Sparkles className="w-5 h-5" />
             <span>Upgrade ke Paket Pro (Rp99rb/bln)</span>
-          </a>
+          </Link>
         </Button>
       </div>
     );

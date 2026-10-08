@@ -29,6 +29,33 @@ function LoginForm() {
 
   const supabase = createClient();
 
+  const setSessionCookies = async (role: string) => {
+    const isProd = typeof window !== "undefined" && window.location.protocol === "https:";
+    const secureFlag = isProd ? "; Secure" : "";
+    const maxAge = 60 * 60 * 24 * 30; // 30 days
+
+    document.cookie = `dicatetin_session=${role}; path=/; max-age=${maxAge}; SameSite=Lax${secureFlag}`;
+    if (role === "admin" || role === "superadmin") {
+      document.cookie = `dicatetin_admin_session=admin; path=/; max-age=${maxAge}; SameSite=Lax${secureFlag}`;
+    }
+
+    try {
+      localStorage.setItem("dicatetin_session", role);
+      if (role === "admin" || role === "superadmin") {
+        localStorage.setItem("dicatetin_admin_session", "admin");
+      }
+    } catch (e) {}
+
+    // Set server HTTP cookies synchronously
+    try {
+      await fetch("/api/auth/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role }),
+      });
+    } catch (e) {}
+  };
+
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -38,8 +65,7 @@ function LoginForm() {
 
     // 1. Primary Superadmin Authentication (fauzymnf29@gmail.com)
     if (cleanEmail === "fauzymnf29@gmail.com" && password === "Test123") {
-      document.cookie = "dicatetin_session=admin; path=/; max-age=86400; SameSite=Lax";
-      document.cookie = "dicatetin_admin_session=admin; path=/; max-age=86400; SameSite=Lax";
+      await setSessionCookies("admin");
       
       // Also establish Supabase session
       try {
@@ -47,22 +73,20 @@ function LoginForm() {
           email: cleanEmail,
           password,
         });
-      } catch (e) {
-        // continue
-      }
+      } catch (e) {}
 
       setTimeout(() => {
         window.location.href = redirectPath.startsWith("/admin") ? redirectPath : "/admin";
-      }, 300);
+      }, 200);
       return;
     }
 
     // 2. Demo User Login Bypass for quick testing
     if (cleanEmail === "user@dicatetin.id" || cleanEmail.includes("user")) {
-      document.cookie = "dicatetin_session=user; path=/; max-age=86400; SameSite=Lax";
+      await setSessionCookies("user");
       setTimeout(() => {
         window.location.href = redirectPath.startsWith("/app") ? redirectPath : "/app";
-      }, 300);
+      }, 200);
       return;
     }
 
@@ -87,14 +111,11 @@ function LoginForm() {
         const isAdminUser = cleanEmail === "fauzymnf29@gmail.com";
 
         if (isAdminUser) {
-          document.cookie = "dicatetin_session=admin; path=/; max-age=86400; SameSite=Lax";
-          document.cookie = "dicatetin_admin_session=admin; path=/; max-age=86400; SameSite=Lax";
+          await setSessionCookies("admin");
           window.location.href = redirectPath.startsWith("/admin") ? redirectPath : "/admin";
           return;
         }
 
-        document.cookie = "dicatetin_session=active; path=/; max-age=86400; SameSite=Lax";
-        
         const { data: profile } = await supabase
           .from("profiles")
           .select("status, role")
@@ -102,17 +123,18 @@ function LoginForm() {
           .single();
 
         if (profile?.status === "pending") {
+          await setSessionCookies("pending");
           window.location.href = "/menunggu-persetujuan";
           return;
         }
 
         if (profile?.role === "admin" || profile?.role === "superadmin") {
-          document.cookie = "dicatetin_session=admin; path=/; max-age=86400; SameSite=Lax";
-          document.cookie = "dicatetin_admin_session=admin; path=/; max-age=86400; SameSite=Lax";
+          await setSessionCookies("admin");
           window.location.href = "/admin";
           return;
         }
 
+        await setSessionCookies("user");
         window.location.href = redirectPath.startsWith("/app") ? redirectPath : "/app";
       }
     } catch (err: any) {

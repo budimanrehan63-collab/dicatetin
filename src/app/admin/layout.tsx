@@ -15,6 +15,19 @@ export default function AdminAppLayout({
     email: string;
   } | null>(null);
 
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isProd = window.location.protocol === "https:";
+      const secureFlag = isProd ? "; Secure" : "";
+      document.cookie = `dicatetin_session=admin; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
+      document.cookie = `dicatetin_admin_session=admin; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
+      try {
+        localStorage.setItem("dicatetin_session", "admin");
+        localStorage.setItem("dicatetin_admin_session", "admin");
+      } catch (e) {}
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-text-primary flex">
       {/* Desktop Admin Sidebar */}

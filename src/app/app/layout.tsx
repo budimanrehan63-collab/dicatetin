@@ -13,6 +13,24 @@ export default function UserAppLayout({
 }) {
   const [quickRecordOpen, setQuickRecordOpen] = useState(false);
 
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const cookies = document.cookie;
+      const stored = localStorage.getItem("dicatetin_session") || "user";
+      const storedAdmin = localStorage.getItem("dicatetin_admin_session");
+
+      const isProd = window.location.protocol === "https:";
+      const secureFlag = isProd ? "; Secure" : "";
+
+      if (!cookies.includes("dicatetin_session=")) {
+        document.cookie = `dicatetin_session=${stored}; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
+      }
+      if (storedAdmin && !cookies.includes("dicatetin_admin_session=")) {
+        document.cookie = `dicatetin_admin_session=admin; path=/; max-age=2592000; SameSite=Lax${secureFlag}`;
+      }
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-text-primary flex">
       {/* Desktop Sidebar */}
